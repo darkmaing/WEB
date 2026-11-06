@@ -1,0 +1,1 @@
+@C:\Users\IPC\AppData\Local\Programs\Python\Python310\python.exe "%~dp0app.py"

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Choose Sites</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: #fff;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 30px;
+        }
+
+        .site-btn {
+            width: 120px;
+            height: 60px;
+            margin: 8px;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            border: 2px solid #555;
+            background: #222;
+            color: #fff;
+            position: relative;
+        }
+
+        .site-btn.selected {
+            background: #ffd700;
+            color: #000;
+        }
+
+        /* LEFT / RIGHT 표시 */
+        .site-btn .pos {
+            position: absolute;
+            top: 4px;
+            right: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 6px;
+            background: #000;
+            color: #ffd700;
+        }
+
+        .control {
+            margin-top: 30px;
+        }
+
+        .swap-btn,
+        .submit-btn {
+            font-size: 20px;
+            padding: 10px 24px;
+            margin: 0 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Choose Site (LEFT / RIGHT)</h1>
+
+<form method="POST" action="/display">
+
+    <div>
+        <!-- 버튼들 -->
+        <button type="button" class="site-btn" data-site="1163">1163</button>
+        <button type="button" class="site-btn" data-site="1262">1262</button>
+        <button type="button" class="site-btn" data-site="1462">1462</button>
+        <button type="button" class="site-btn" data-site="1583">1583</button>
+        <button type="button" class="site-btn" data-site="2111">2111</button>
+        <button type="button" class="site-btn" data-site="3213">3213</button>
+ 	<button type="button" class="site-btn" data-site="3413">3413</button>
+        <p></p>
+        <button type="button" class="site-btn" data-site="1173">1173</button>
+        <button type="button" class="site-btn" data-site="1272">1272</button>
+        <button type="button" class="site-btn" data-site="1472">1472</button>
+        <button type="button" class="site-btn" data-site="1593">1593</button>
+        <button type="button" class="site-btn" data-site="3111">3111</button>
+        <button type="button" class="site-btn" data-site="3311">3311</button>
+	<button type="button" class="site-btn" data-site="3511">3511<</button>
+    </div>
+
+    <!-- 실제 전송용 -->
+    <div id="hiddenInputs"></div>
+
+    <div class="control">
+        <button type="button" class="swap-btn" id="swapBtn">↔ Change Left/Right</button>
+        <button type="submit" class="submit-btn">Submit</button>
+    </div>
+
+</form>
+
+<script>
+    const siteButtons = document.querySelectorAll(".site-btn");
+    const hiddenInputs = document.getElementById("hiddenInputs");
+    const swapBtn = document.getElementById("swapBtn");
+
+    let selectedSites = [];
+
+    siteButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const site = btn.dataset.site;
+
+            if (selectedSites.includes(site)) {
+                selectedSites = selectedSites.filter(s => s !== site);
+            } else {
+                if (selectedSites.length >= 2) {
+                    alert("사이트는 최대 2개까지 선택 가능합니다.");
+                    return;
+                }
+                selectedSites.push(site);
+            }
+
+            render();
+        });
+    });
+
+    swapBtn.addEventListener("click", () => {
+        if (selectedSites.length === 2) {
+            selectedSites.reverse();
+            render();
+        }
+    });
+
+    function render() {
+        // 버튼 상태 초기화
+        siteButtons.forEach(btn => {
+            btn.classList.remove("selected");
+            const badge = btn.querySelector(".pos");
+            if (badge) badge.remove();
+        });
+
+        // 선택 상태 표시
+        selectedSites.forEach((site, idx) => {
+            const btn = document.querySelector(`.site-btn[data-site="${site}"]`);
+            btn.classList.add("selected");
+
+            const badge = document.createElement("div");
+            badge.className = "pos";
+            badge.innerText = idx === 0 ? "LEFT" : "RIGHT";
+            btn.appendChild(badge);
+        });
+
+        // hidden input 갱신
+        hiddenInputs.innerHTML = "";
+        selectedSites.forEach(site => {
+            const input = document.createElement("input");
+            input.type = "hidden";
+            input.name = "site";
+            input.value = site;
+            hiddenInputs.appendChild(input);
+        });
+    }
+</script>
+
+</body>
+</html>

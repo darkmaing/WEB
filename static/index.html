@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>현황판</title>
+    <script>
+        function fetchData() {
+            let siteId = document.getElementById("siteInput").value;
+			
+			 if (siteId) {
+			localStorage.setItem("siteNumber", siteId); // 입력값 저장
+			}
+			
+            fetch(`http://192.168.208.252:5000/get_shipping_status?site_id=${siteId}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("order_no").innerText = data.order_no;
+                    document.getElementById("ct_no").innerText = data.ct_no;
+                    document.getElementById("spec_no").innerText = data.spec_no;
+					document.getElementById("product_name").innerText = data.product_name;
+                })
+                .catch(error => console.error("오류 발생:", error));
+        }
+		
+		window.onload = function () {
+		let savedSiteId = localStorage.getItem("siteNumber");
+		if (savedSiteId) {
+			document.getElementById("siteInput").value = savedSiteId; // 입력 필드에 저장된 값 자동 설정
+			fetchData(); // 저장된 값으로 자동 데이터 요청
+			}
+		};
+		
+		function updateGantryStatus(status) {
+			let gantry1 = document.getElementById("gantry1");
+			let gantry2 = document.getElementById("gantry2");
+			let gantry3 = document.getElementById("gantry3");
+
+			// 상태별 이미지 변경
+			if (status === "error") {
+				gantry1.src = "/static/data/red.png";  // 빨간 버튼 이미지
+				gantry2.src = "/static/data/red.png";  // 빨간 버튼 이미지
+				gantry3.src = "/static/data/red.png";  // 빨간 버튼 이미지
+			} else if (status === "operating") {
+				gantry1.src = "/static/data/green.png";  // 초록 버튼 이미지
+				gantry2.src = "/static/data/green.png";  // 초록 버튼 이미지
+				gantry3.src = "/static/data/green.png";  // 초록 버튼 이미지
+			} else {
+				gantry1.src = "/static/data/gray.png";  // 회색 버튼 이미지
+				gantry2.src = "/static/data/gray.png";  // 회색 버튼 이미지
+				gantry3.src = "/static/data/gray.png";  // 회색 버튼 이미지
+			}
+		}
+
+		// 테스트: 3초마다 상태 변경
+		setInterval(() => {
+			let states = ["error", "operating", "idle"];
+			let randomState = states[Math.floor(Math.random() * states.length)];
+			updateGantryStatus(randomState);
+		}, 3000);
+		
+		function updateDateTime() {
+			let now = new Date();
+			
+			// 날짜 가져오기
+			let year = now.getFullYear();  // 연도
+			let month = (now.getMonth() + 1).toString().padStart(2, '0'); // 월 (0부터 시작하므로 +1)
+			let day = now.getDate().toString().padStart(2, '0');  // 일
+			
+			// 시간 가져오기
+			let hours = now.getHours().toString().padStart(2, '0');  // 시
+			let minutes = now.getMinutes().toString().padStart(2, '0');  // 분
+			let seconds = now.getSeconds().toString().padStart(2, '0');  // 초
+			
+			// YYYY-MM-DD HH:MM:SS 형식으로 표시
+			let formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+			
+			document.getElementById("currentDateTime").innerText = formattedDateTime;
+		}
+
+		// 1초마다 날짜 + 시간 업데이트
+		setInterval(updateDateTime, 1000);
+		setInterval(fetchData, 3000);
+
+		// 페이지 로드 시 최초 호출
+		updateDateTime();
+		
+		function showErrorMessage(message) {
+			document.getElementById("errorMessage").innerText = `⚠ 오류: ${message}`;
+		}
+
+		// 예제: 5초 후 에러 발생 메시지 변경
+		setTimeout(() => {
+			showErrorMessage("서버 연결 끊김!");
+		}, 5000);
+			
+    </script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('/static/data/back.png') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .container {
+      position: absolute;
+      width: 1920px; /* 이미지 실제 크기 */
+      height: 1080px;
+      margin: 0 auto;
+    }
+
+    .title-box {
+      position: absolute;
+      color: #FFFFFF;
+      font-size: 70px;
+      font-weight: bold;
+    }
+
+    .site-input-box {
+      position: absolute;
+      top: 10px; 
+      right: 20px; /* 우측 상단으로 이동 */
+      font-size: 20px;
+      
+	}
+
+	.current-time {
+		position: absolute;
+		top: 40px;
+		right: 20px;
+		font-size: 40px;
+		font-weight: bold;
+		color: #000000; /* 노란색 */
+	}
+	
+    .data-box1 {
+      position: absolute;
+      color: #FFFFFF;
+      font-size: 60px;
+      font-weight: bold;
+    }
+	
+	.data-box2 {
+      position: absolute;
+      color: #FFD700;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    /* 예시 위치 지정 - 실제 좌표는 눈대중 또는 이미지 크기에 맞춰 조정 */
+	.title      	   { top: 10px; left: 700px; }
+    .order-number      { top: 50px; left: 100px; }
+    .order-data        { top: 110px; left: 450px; }
+	.ct-number         { top: 270px; left: 70px; }
+	.ct-data           { top: 270px; left: 350px; }
+    .spec-number       { top: 380px; left: 70px; }
+    .spec-data         { top: 380px; left: 350px; }
+    .product-name      { top: 495px; left: 70px; }
+    .product-data      { top: 520px; left: 350px; font-size: 35px; }
+    .status            { top: 600px; left: 70px; }
+    .label-type        { top: 710px; left: 70px; }
+    .order-qty         { top: 150px; left: 820px; }
+    .output-qty        { top: 270px; left: 820px; }
+    .gt-qty            { top: 380px; left: 820px; }
+    .cv-qty            { top: 600px; left: 820px; }
+    .completed-qty     { top: 710px; left: 820px; }
+    .gantry1-status    { top: 850px; left: 70px; font-size: 50px; }
+    .gantry2-status    { top: 850px; left: 530px; font-size: 50px; }
+    .gantry3-status    { top: 850px; left: 990px; font-size: 50px; }
+
+
+	.gantry1-container {
+		position: absolute;
+		top: 890px;
+		left: 70px;
+		width: 120px;
+		height: 120px;
+		text-align: center;
+	}
+
+	.gantry1-button {
+		width: 140px;  /* 버튼 크기 */
+		height: 50px;
+		display: block;
+	}
+
+	.gantry1-label {
+		position: absolute;
+		top: 20%;
+		left: 58%;
+		transform: translate(-50%, -50%); /* 중앙 정렬 */
+		font-size: 24px;
+		font-weight: bold;
+		color: white;
+	}
+
+	.gantry2-container {
+		position: absolute;
+		top: 890px;
+		left: 530px;
+		width: 120px;
+		height: 120px;
+		text-align: center;
+	}
+
+	.gantry2-button {
+		width: 140px;  /* 버튼 크기 */
+		height: 50px;
+		display: block;
+	}
+
+	.gantry2-label {
+		position: absolute;
+		top: 20%;
+		left: 58%;
+		transform: translate(-50%, -50%); /* 중앙 정렬 */
+		font-size: 24px;
+		font-weight: bold;
+		color: white;
+	}
+
+	.gantry3-container {
+		position: absolute;
+		top: 890px;
+		left: 990px;
+		width: 120px;
+		height: 120px;
+		text-align: center;
+	}
+
+	.gantry3-button {
+		width: 140px;  /* 버튼 크기 */
+		height: 50px;
+		display: block;
+	}
+
+	.gantry3-label {
+		position: absolute;
+		top: 20%;
+		left: 58%;
+		transform: translate(-50%, -50%); /* 중앙 정렬 */
+		font-size: 24px;
+		font-weight: bold;
+		color: white;
+	}
+
+	.error-marquee {
+		position: absolute;
+		top: 1000px;
+		left: 60px;
+		bottom: 20px;  /* 페이지 맨 아래 */
+		width: 390px;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+
+	.error-marquee span {
+		display: inline-block;
+		font-size: 24px;
+		font-weight: bold;
+		color: red; /* 오류 메시지 색 */
+		animation: scrollLeft 4s linear infinite; /* 애니메이션 적용 */
+	}
+
+	@keyframes scrollLeft {
+		from {
+			transform: translateX(100%);
+		}
+		to {
+			transform: translateX(-100%);
+		}
+	}
+
+  </style>
+
+</head>
+<body>
+	<div class="container">    
+    <div class="site-input-box">
+		<input type="text" id="siteInput" placeholder="Site Number">
+	</div>
+	<div class="current-time"> <span id="currentDateTime"></span></div>    
+	<div class="data-box1 order-data" p id="order_no">none</p></div>  
+
+</div>
+</div>
+</body>
+</html>

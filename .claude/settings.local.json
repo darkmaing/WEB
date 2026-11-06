@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(cmd /c \"cd /d \"\"C:\\\\Users\\\\mino\\\\Desktop\\\\새 폴더 \\(2\\)\\\\Web\"\" && python app.py > %TEMP%\\\\flask_log.txt 2>&1 & timeout /t 4 > nul && type %TEMP%\\\\flask_log.txt\")"
+    ]
+  }
+}
