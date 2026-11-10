@@ -4,3 +4,5 @@ __pycache__/
 wheelhouse/
 *.log
 test_app.py
+config_.json
+read.txt
