@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.pyo
+wheelhouse/
+*.log
+test_app.py

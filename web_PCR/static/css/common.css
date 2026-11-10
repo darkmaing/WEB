@@ -1,0 +1,84 @@
+/* ================= 공통 ================= */
+body {
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+}
+
+.screen {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.panel {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.current-time {
+    position: absolute;
+    top: 40px;
+    right: 20px;
+    font-size: 40px;
+    font-weight: bold;
+    color: #000;
+}
+
+/* ================= 유동 배치 핵심 ================= */
+.area {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+
+    width: var(--w, auto);
+    height: var(--h, auto);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 🔒 줄바꿈 되어도 중앙 고정 */
+.center-anchor {
+    transform: translate(-50%, -50%);
+    justify-content: center;
+    text-align: center;
+}
+
+/* ================= 텍스트 ================= */
+.value {
+    font-size: var(--size, 3vh);
+    font-weight: var(--weight, 600);
+    color: var(--color, #fff);
+
+    text-align: center;
+    line-height: 1.2;
+
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+/* ================= 값 변경 깜빡임 ================= */
+.blink {
+    animation: blinkEffect 1s ease-in-out;
+}
+
+@keyframes blinkEffect {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.2;
+        transform: scale(1.08);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

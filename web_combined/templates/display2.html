@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Display 2</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/display2.css') }}?v=8">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            background: #111111 !important;
+            background-image: none !important;
+            font-family: Arial, Helvetica, sans-serif;
+            overflow: hidden !important;
+        }
+
+        .screen {
+            position: relative !important;
+            display: block !important;
+            width: 100vw;
+            height: 100vh;
+            border: 4px solid #555555;
+            background: #111111 !important;
+            background-image: none !important;
+            overflow: hidden !important;
+        }
+
+        .header-bar {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            width: 100% !important;
+            padding: 0 2.5vw !important;
+            background: #0f62c4 !important;
+            background: linear-gradient(180deg, #1266c8 0%, #0d56ac 100%) !important;
+            border-bottom: 2px solid #888888 !important;
+        }
+
+        .header-title {
+            color: #ffffff !important;
+            font-size: calc(1.5vw + 2.4vh);
+            font-weight: 700 !important;
+            letter-spacing: 0.5px;
+            line-height: 1 !important;
+            white-space: nowrap !important;
+        }
+
+        .current-time {
+            font-size: calc(1.05vw + 1.7vh);
+            font-weight: 700 !important;
+            color: #000000 !important;
+            line-height: 1 !important;
+            white-space: nowrap !important;
+        }
+
+        .dual-container {
+            display: flex !important;
+            width: 100% !important;
+            gap: 2px !important;
+            background-color: #888888 !important;
+        }
+
+        .dual-panel {
+            flex: 1 1 50% !important;
+            width: 50% !important;
+            height: 100% !important;
+        }
+
+        .info-grid {
+            display: grid !important;
+            grid-template-columns: 18.5% 40.75% 40.75% !important;
+            width: 100% !important;
+            height: 100% !important;
+            gap: 0 !important;
+            background-color: #1c1c1c !important;
+            background-image: none !important;
+        }
+
+        .grid-cell {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 0 0.5vw !important;
+            text-align: center !important;
+            overflow: hidden !important;
+            position: relative !important;
+            border: 2px solid #888888 !important;
+        }
+
+        .col-span-2 { grid-column: span 2 !important; }
+
+        .grid-cell.label-cell {
+            background-color: #3f3f3f !important;
+            color: #dcdcdc !important;
+            font-size: calc(0.65vw + 1.05vh);
+            font-weight: 700 !important;
+            line-height: 1.1 !important;
+            white-space: normal !important;
+            word-break: normal !important;
+            overflow-wrap: break-word !important;
+        }
+
+        .grid-cell.value-cell {
+            background-color: #1c1c1c !important;
+            color: #ffffff !important;
+        }
+
+        .grid-cell.sub-label-cell {
+            background-color: #666666 !important;
+            color: #ffffff !important;
+            font-size: calc(0.8vw + 1.3vh);
+            font-weight: 700 !important;
+            line-height: 1 !important;
+            white-space: nowrap !important;
+        }
+
+        .pos-badge {
+            position: absolute !important;
+            left: 0.8vw !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            padding: 0.3vh 0.6vw !important;
+            font-size: calc(0.65vw + 1.05vh);
+            font-weight: 700 !important;
+            color: #ffffff !important;
+            border-radius: 4px !important;
+            line-height: 1 !important;
+            white-space: nowrap !important;
+        }
+
+        .pos-badge.left-badge  { background-color: #e60000 !important; }
+        .pos-badge.right-badge { background-color: #0033ee !important; }
+
+        .unit-kg {
+            position: absolute !important;
+            right: 1.2vw !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            color: #ffffff !important;
+            font-size: calc(1.1vw + 1.8vh);
+            font-weight: 700 !important;
+            line-height: 1 !important;
+            white-space: nowrap !important;
+        }
+
+        .value {
+            display: inline-block !important;
+            text-align: center !important;
+            vertical-align: middle !important;
+            font-size: calc(1.05vw + 1.7vh);
+            font-weight: 700 !important;
+            color: #ffffff !important;
+            line-height: 1.1 !important;
+            word-break: break-word;
+        }
+
+        .value:empty { display: none !important; }
+
+        [id$="_site_no"]    { color: #ffd700 !important; white-space: nowrap !important; }
+        [id$="_check_result"] { color: #1af94d !important; font-weight: 700 !important; }
+
+        [id$="_mater_name"],
+        [id$="_supply_name"] { white-space: nowrap !important; word-break: normal !important; }
+
+        [id$="_plt_no"],
+        [id$="_mater_no"],
+        [id$="_qty"],
+        [id$="_barcode"],
+        [id$="_prod_date"],
+        [id$="_valid_date"],
+        [id$="_usr_id"] { white-space: nowrap !important; }
+
+        .blink { animation: blinkEffect 1s ease-in-out; }
+
+        @keyframes blinkEffect {
+            0%   { opacity: 1; transform: scale(1); }
+            50%  { opacity: 0.2; transform: scale(1.08); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+    </style>
+
+    <script>
+        function setImp(el, prop, val) {
+            if (el) el.style.setProperty(prop, val, "important");
+        }
+
+        function adjustResponsiveLayout() {
+            var w = window.innerWidth || document.documentElement.clientWidth || 1920;
+            var h = window.innerHeight || document.documentElement.clientHeight || 1080;
+            var scale = Math.min(w / 1920, h / 1080);
+
+            var screenEl      = document.querySelector(".screen");
+            var headerEl      = document.querySelector(".header-bar");
+            var dualContainer = document.querySelector(".dual-container");
+            if (!screenEl || !headerEl || !dualContainer) return;
+
+            var outerBorder = Math.max(2, Math.round(4 * scale));
+            var cellBorder  = Math.max(1, Math.round(2 * scale));
+            setImp(screenEl, "width",  w + "px");
+            setImp(screenEl, "height", h + "px");
+            setImp(screenEl, "border-width", outerBorder + "px");
+
+            var innerH  = h - (outerBorder * 2);
+            var headerH = Math.round(innerH * 0.112);
+            var gridH   = innerH - headerH;
+
+            setImp(headerEl,      "height", headerH + "px");
+            setImp(dualContainer, "height", gridH   + "px");
+
+            var ratios = [0.13, 0.175, 0.19, 0.175, 0.11, 0.11, 0.11];
+            var rowHeights = [];
+            var usedH = 0;
+            for (var i = 0; i < ratios.length; i++) {
+                var rowH = (i === ratios.length - 1)
+                    ? (gridH - usedH)
+                    : Math.round(gridH * ratios[i]);
+                usedH += rowH;
+                rowHeights.push(rowH + "px");
+            }
+
+            var grids = dualContainer.querySelectorAll(".info-grid");
+            for (var t = 0; t < grids.length; t++) {
+                setImp(grids[t], "height", gridH + "px");
+                setImp(grids[t], "grid-template-rows", rowHeights.join(" "));
+
+                var cells = grids[t].querySelectorAll(".grid-cell");
+                for (var j = 0; j < cells.length; j++) {
+                    setImp(cells[j], "border-width", cellBorder + "px");
+                    setImp(cells[j], "border-style", "solid");
+                    setImp(cells[j], "border-color", "#888888");
+                }
+            }
+
+            setImp(document.querySelector(".header-title"), "font-size", Math.max(12, Math.round(52 * scale)) + "px");
+            setImp(document.querySelector(".current-time"), "font-size", Math.max(10, Math.round(36 * scale)) + "px");
+
+            var badges = document.querySelectorAll(".pos-badge");
+            for (var b = 0; b < badges.length; b++) {
+                setImp(badges[b], "font-size", Math.max(9, Math.round(22 * scale)) + "px");
+            }
+            var kgs = document.querySelectorAll(".unit-kg");
+            for (var u = 0; u < kgs.length; u++) {
+                setImp(kgs[u], "font-size", Math.max(10, Math.round(38 * scale)) + "px");
+            }
+            var subLabels = document.querySelectorAll(".sub-label-cell");
+            for (var sl = 0; sl < subLabels.length; sl++) {
+                setImp(subLabels[sl], "font-size", Math.max(9, Math.round(52 * scale)) + "px");
+            }
+            var labels = document.querySelectorAll(".label-cell:not(.small-label):not(.barcode-label):not(.large-label)");
+            for (var k = 0; k < labels.length; k++) {
+                setImp(labels[k], "font-size", Math.max(9, Math.round(44 * scale)) + "px");
+            }
+            var largeLabels = document.querySelectorAll(".large-label");
+            for (var lk = 0; lk < largeLabels.length; lk++) {
+                setImp(largeLabels[lk], "font-size", Math.max(9, Math.round(50 * scale)) + "px");
+            }
+            var barcodeLabels = document.querySelectorAll(".barcode-label");
+            for (var bk = 0; bk < barcodeLabels.length; bk++) {
+                setImp(barcodeLabels[bk], "font-size", Math.max(9, Math.round(40 * scale)) + "px");
+            }
+            var smallLabels = document.querySelectorAll(".small-label");
+            for (var sk = 0; sk < smallLabels.length; sk++) {
+                setImp(smallLabels[sk], "font-size", Math.max(9, Math.round(32 * scale)) + "px");
+            }
+
+            var suffixes = {
+                "_site_no": 100, "_mater_name": 68, "_supply_name": 68,
+                "_plt_type": 56, "_plt_no": 78, "_qty": 86,
+                "_mater_no": 66, "_check_result": 88, "_barcode": 44,
+                "_prod_date": 40, "_valid_date": 40, "_usr_id": 62
+            };
+            var prefixes = ["left", "right"];
+            for (var p = 0; p < prefixes.length; p++) {
+                for (var sfx in suffixes) {
+                    setImp(document.getElementById(prefixes[p] + sfx), "font-size", Math.max(9, Math.round(suffixes[sfx] * scale)) + "px");
+                }
+            }
+        }
+
+        function updateDateTime() {
+            var now = new Date();
+            var y  = now.getFullYear();
+            var m  = String(now.getMonth() + 1).padStart(2, '0');
+            var d  = String(now.getDate()).padStart(2, '0');
+            var h  = String(now.getHours()).padStart(2, '0');
+            var mi = String(now.getMinutes()).padStart(2, '0');
+            var s  = String(now.getSeconds()).padStart(2, '0');
+            var el = document.getElementById("currentDateTime");
+            if (el) el.innerText = y + "-" + m + "-" + d + " " + h + ":" + mi + ":" + s;
+        }
+
+        window.addEventListener("resize", adjustResponsiveLayout);
+        window.addEventListener("DOMContentLoaded", function () {
+            adjustResponsiveLayout();
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+        });
+    </script>
+</head>
+
+<body>
+<div class="screen">
+
+    <div class="header-bar">
+        <div class="header-title">Site In/Out Result Info.</div>
+        <div class="current-time"><span id="currentDateTime"></span></div>
+    </div>
+
+    <div class="dual-container">
+
+        <!-- LEFT -->
+        <div class="dual-panel" id="leftPanel">
+            <div class="info-grid">
+
+                <div class="grid-cell label-cell large-label">Site<br>No</div>
+                <div class="grid-cell value-cell col-span-2">
+                    <span class="pos-badge left-badge">LEFT</span>
+                    <span class="value" id="left_site_no">{{ left.site_no if left else left_site }}</span>
+                </div>
+
+                <div class="grid-cell label-cell">Material<br>Name</div>
+                <div class="grid-cell value-cell">
+                    <span class="value" id="left_mater_name">{{ left.mater_name if left else '' }}</span>
+                    <span class="value" id="left_supply_name">{{ left.supply_name if left else '' }}</span>
+                </div>
+                <div class="grid-cell value-cell">
+                    <span class="value" id="left_plt_type">{{ left.plt_type if left else '' }}</span>
+                </div>
+
+                <div class="grid-cell label-cell large-label">Pallet No</div>
+                <div class="grid-cell value-cell">
+                    <span class="value" id="left_plt_no">{{ left.plt_no if left else '' }}</span>
+                </div>
+                <div class="grid-cell value-cell">
+                    <span class="value" id="left_qty">{{ left.qty if left else '' }}</span>
+                    <span class="unit-kg">KG</span>
+                </div>
+
+                <div class="grid-cell label-cell">Material No</div>
+                <div class="grid-cell value-cell">
+                    <span class="value" id="left_mater_no">{{ left.mater_no if left else '' }}</span>
+                </div>
+                <div class="grid-cell value-cell">
+                    <span class="value" id="left_check_result">{{ left.check_result if left else 'N/A' }}</span>
+                </div>
+
+                <div class="grid-cell label-cell barcode-label">BarCode</div>
+                <div class="grid-cell value-cell col-span-2">
+                    <span class="value" id="left_barcode">{{ left.barcode if left else '' }}</span>
+                </div>
+
+                <div class="grid-cell label-cell small-label">Production<br>Time</div>
+                <div class="grid-cell value-cell">
+                    <span class="value" id="left_prod_date">{{ left.prod_date if left else '' }}</span>
+                </div>
+                <div class="grid-cell sub-label-cell">USER_ID</div>
+
+                <div class="grid-cell label-cell">Max Time</div>
+                <div class="grid-cell value-cell">
+                    <span class="value" id="left_valid_date">{{ left.valid_date if left else '' }}</span>
+                </div>
+                <div class="grid-cell value-cell">
+                    <span class="value" id="left_usr_id">{{ left.usr_id if left else '' }}</span>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="dual-panel" id="rightPanel">
+            <div class="info-grid">
+
+                <div class="grid-cell label-cell large-label">Site<br>No</div>
+                <div class="grid-cell value-cell col-span-2">
+                    <span class="pos-badge right-badge">RIGHT</span>
+                    <span class="value" id="right_site_no">{{ right.site_no if right else right_site }}</span>
+                </div>
+
+                <div class="grid-cell label-cell">Material<br>Name</div>
+                <div class="grid-cell value-cell">
+                    <span class="value" id="right_mater_name">{{ right.mater_name if right else '' }}</span>
+                    <span class="value" id="right_supply_name">{{ right.supply_name if right else '' }}</span>
+                </div>
+                <div class="grid-cell value-cell">
+                    <span class="value" id="right_plt_type">{{ right.plt_type if right else '' }}</span>
+                </div>
+
+                <div class="grid-cell label-cell large-label">Pallet No</div>
+                <div class="grid-cell value-cell">
+                    <span class="value" id="right_plt_no">{{ right.plt_no if right else '' }}</span>
+                </div>
+                <div class="grid-cell value-cell">
+                    <span class="value" id="right_qty">{{ right.qty if right else '' }}</span>
+                    <span class="unit-kg">KG</span>
+                </div>
+
+                <div class="grid-cell label-cell">Material No</div>
+                <div class="grid-cell value-cell">
+                    <span class="value" id="right_mater_no">{{ right.mater_no if right else '' }}</span>
+                </div>
+                <div class="grid-cell value-cell">
+                    <span class="value" id="right_check_result">{{ right.check_result if right else 'N/A' }}</span>
+                </div>
+
+                <div class="grid-cell label-cell barcode-label">BarCode</div>
+                <div class="grid-cell value-cell col-span-2">
+                    <span class="value" id="right_barcode">{{ right.barcode if right else '' }}</span>
+                </div>
+
+                <div class="grid-cell label-cell small-label">Production<br>Time</div>
+                <div class="grid-cell value-cell">
+                    <span class="value" id="right_prod_date">{{ right.prod_date if right else '' }}</span>
+                </div>
+                <div class="grid-cell sub-label-cell">USER_ID</div>
+
+                <div class="grid-cell label-cell">Max Time</div>
+                <div class="grid-cell value-cell">
+                    <span class="value" id="right_valid_date">{{ right.valid_date if right else '' }}</span>
+                </div>
+                <div class="grid-cell value-cell">
+                    <span class="value" id="right_usr_id">{{ right.usr_id if right else '' }}</span>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+adjustResponsiveLayout();
+
+let prevData = { left: null, right: null };
+
+async function reloadData() {
+    const params = new URLSearchParams({
+        left:  "{{ left_site }}",
+        right: "{{ right_site }}"
+    });
+    const res  = await fetch("{{ api_prefix }}/api/display2?" + params.toString());
+    const data = await res.json();
+
+    if (data.left)  { updateBlock("left",  data.left,  prevData.left);  prevData.left  = data.left;  }
+    if (data.right) { updateBlock("right", data.right, prevData.right); prevData.right = data.right; }
+}
+
+function updateBlock(prefix, curr, prev) {
+    for (const key in curr) {
+        const el = document.getElementById(prefix + "_" + key);
+        if (!el) continue;
+        if (prev && prev[key] !== curr[key]) {
+            el.classList.add("blink");
+            setTimeout(() => el.classList.remove("blink"), 1000);
+        }
+        el.textContent = curr[key];
+    }
+}
+
+reloadData();
+setInterval(reloadData, 3000);
+</script>
+
+</body>
+</html>

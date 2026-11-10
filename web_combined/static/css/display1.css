@@ -1,0 +1,219 @@
+@import url("common.css");
+
+/* ================= Display 1: 순수 HTML <table> + CSS 반응형 레이아웃 ================= */
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: #1c1c1c !important;
+    background-image: none !important;
+    font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden !important;
+}
+
+.screen {
+    position: relative !important;
+    display: block !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    border: 4px solid #000000 !important;
+    background: #1c1c1c !important;
+    background-image: none !important;
+    overflow: hidden !important;
+}
+
+/* 전체 화면을 채우는 단일 HTML 테이블 (상단 헤더 1행 + 데이터 7행 = 총 8행) */
+.info-table {
+    display: table !important;
+    width: 100% !important;
+    height: 100% !important;
+    border-collapse: collapse !important;
+    table-layout: fixed !important;
+    background-color: #1c1c1c !important;
+    background-image: none !important;
+}
+
+.info-table thead {
+    display: table-header-group !important;
+    width: 100% !important;
+}
+
+.info-table tbody {
+    display: table-row-group !important;
+    width: 100% !important;
+}
+
+.info-table tr {
+    display: table-row !important;
+    width: 100% !important;
+}
+
+.info-table th,
+.info-table td {
+    display: table-cell !important;
+    border: 3px solid #555555 !important;
+    padding: 0 1vw !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+/* 상단 타이틀 행 (Site In/Out Result Info.) */
+.info-table th.header-cell {
+    padding: 0 2.5vw !important;
+    background: #0f62c4 !important;
+    background: linear-gradient(180deg, #1266c8 0%, #0d56ac 100%) !important;
+    border-top: 2px solid #3a7bd5 !important;
+    border-left: 3px solid #555555 !important;
+    border-right: 3px solid #555555 !important;
+    border-bottom: 3px solid #555555 !important;
+}
+
+.header-bar {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.header-title {
+    color: #ffffff !important;
+    font-size: calc(1.5vw + 2.4vh) !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.5px;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+}
+
+.current-time {
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+    font-size: calc(1.05vw + 1.7vh) !important;
+    font-weight: 700 !important;
+    color: #000000 !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+}
+
+/* 1열: 좌측 항목명(Label) 컬럼 (18.5%) */
+.info-table th.label-cell {
+    width: 18.5% !important;
+    background-color: #3f3f3f !important;
+    color: #dcdcdc !important;
+    font-size: calc(1.0vw + 1.6vh) !important;
+    font-weight: 700 !important;
+    line-height: 1.1 !important;
+    white-space: nowrap !important;
+}
+
+/* 2열, 3열: 우측 데이터(Value) 컬럼 (각 40.75%) */
+.info-table td.value-cell {
+    width: 40.75% !important;
+    background-color: #1c1c1c !important;
+    color: #ffffff !important;
+}
+
+/* 각 행 높이 비율 (합계 100vh) */
+.row-header,     .row-header th                     { height: 11.2vh !important; }
+.row-site,       .row-site th,       .row-site td       { height: 11.5vh !important; }
+.row-mater-name, .row-mater-name th, .row-mater-name td { height: 15.5vh !important; }
+.row-pallet,     .row-pallet th,     .row-pallet td     { height: 16.8vh !important; }
+.row-mater-no,   .row-mater-no th,   .row-mater-no td   { height: 15.5vh !important; }
+.row-barcode,    .row-barcode th,    .row-barcode td    { height: 9.8vh !important; }
+.row-prod-time,  .row-prod-time th,  .row-prod-time td  { height: 9.8vh !important; }
+.row-max-time,   .row-max-time th,   .row-max-time td   { height: 9.9vh !important; }
+
+/* 수량(KG) 단위 우측 배치 */
+.unit-kg {
+    position: absolute !important;
+    right: 2.8vw !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: #ffffff !important;
+    font-size: calc(1.8vw + 2.9vh) !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+}
+
+/* USER_ID 서브 헤더 셀 (6행 3열 회색 배경) */
+.info-table td.sub-label-cell {
+    width: 40.75% !important;
+    background-color: #666666 !important;
+    color: #ffffff !important;
+    font-size: calc(1.15vw + 1.9vh) !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+}
+
+/* 데이터 텍스트 공통 및 항목별 반응형 크기 */
+.value {
+    display: inline-block !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+    font-size: calc(1.7vw + 2.7vh) !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    line-height: 1.1 !important;
+    word-break: break-word;
+}
+
+.value:empty {
+    display: none !important;
+}
+
+#d_site_no {
+    font-size: calc(1.9vw + 3.0vh) !important;
+    color: #ffd700 !important;
+}
+
+#d_mater_name,
+#d_supply_name {
+    font-size: calc(1.65vw + 2.6vh) !important;
+}
+
+#d_plt_type {
+    font-size: calc(1.7vw + 2.7vh) !important;
+}
+
+#d_plt_no,
+#d_mater_no {
+    font-size: calc(1.8vw + 2.9vh) !important;
+    white-space: nowrap !important;
+}
+
+#d_qty {
+    font-size: calc(1.7vw + 2.7vh) !important;
+    white-space: nowrap !important;
+}
+
+#d_check_result {
+    font-size: calc(1.7vw + 2.7vh) !important;
+    color: #1af94d !important;
+    font-weight: 700 !important;
+}
+
+#d_barcode {
+    font-size: calc(1.65vw + 2.6vh) !important;
+    white-space: nowrap !important;
+}
+
+#d_prod_date,
+#d_valid_date {
+    font-size: calc(1.4vw + 2.2vh) !important;
+    white-space: nowrap !important;
+}
+
+#d_usr_id {
+    font-size: calc(1.45vw + 2.3vh) !important;
+    white-space: nowrap !important;
+}
