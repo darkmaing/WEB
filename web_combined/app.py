@@ -38,6 +38,12 @@ CACHE = {t: {} for t in CONFIG}
 CACHE_TTL = 5
 
 
+@app.route("/")
+def index():
+    first = list(CONFIG.keys())[0]
+    return redirect(url_for("select", app_type=first.lower()))
+
+
 @app.route("/<app_type>/")
 def select(app_type):
     key = app_type.upper()
