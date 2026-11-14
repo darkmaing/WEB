@@ -1,10 +1,10 @@
-from flask import Flask, request, render_template, redirect, url_for
+﻿from flask import Flask, request, render_template, redirect, url_for
 from flask_cors import CORS
 import oracledb
 import json
 from time import time
 
-oracledb.init_oracle_client(lib_dir=r"D:\instantclient_11_2")
+# oracledb.init_oracle_client(lib_dir=r'D:\\instantclient_11_2')
 
 app = Flask(__name__, static_folder='static')
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -18,11 +18,11 @@ def add_no_cache_headers(response):
     response.headers["Expires"] = "0"
     return response
 
-# config.json에서 DB 정보 및 사이트 목록 로드
+# config.json?먯꽌 DB ?뺣낫 諛??ъ씠??紐⑸줉 濡쒕뱶
 with open(r"D:\instantclient_11_2\config.json", "r", encoding="utf-8") as f:
     CONFIG = json.load(f)
 
-# config.json의 db_user, db_password, db_dsn을 읽어서 풀 생성
+# config.json??db_user, db_password, db_dsn???쎌뼱??? ?앹꽦
 pools = {}
 for app_type, cfg in CONFIG.items():
     pools[app_type] = oracledb.create_pool(
@@ -166,5 +166,25 @@ def api_display2(app_type):
     return result
 
 
+@app.route("/preview/display1")
+def preview_display1():
+    dummy = {
+        "site_no": "1163",
+        "mater_name": "SAMPLE MATERIAL",
+        "supply_name": "",
+        "plt_type": "MASTER BATCH",
+        "plt_no": "MB-20261113-001",
+        "qty": "1250",
+        "mater_no": "MAT-98765",
+        "check_result": "OK",
+        "barcode": "8801234567890",
+        "prod_date": "2026-11-13 08:30:00",
+        "valid_date": "2026-11-13 10:45:00",
+        "usr_id": "OPERATOR01"
+    }
+    return render_template("display1.html", site="1163", data=type("D", (), dummy)(), api_prefix="/info")
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+
